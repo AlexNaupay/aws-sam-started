@@ -14,3 +14,7 @@ Resources:
           Properties:
             Path: /users
             Method: POST
+Outputs:
+  MyApi:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/users/"
