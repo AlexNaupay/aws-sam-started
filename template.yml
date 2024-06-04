@@ -8,12 +8,22 @@ Resources:
       Handler: handler.save
       Runtime: nodejs16.x
       CodeUri: ./save
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Environment:
+        Variables:
+          USERS_TABLE_NAME: !Ref UsersTable
       Events:
         Api:
           Type: Api
           Properties:
             Path: /users
             Method: POST
+
+  #DynamoDB
+  UsersTable:
+    Type: AWS::Serverless::SimpleTable
 Outputs:
   MyApi:
     Description: "API Gateway endpoint URL"
