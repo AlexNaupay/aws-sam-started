@@ -54,6 +54,19 @@ Resources:
           Properties:
             Path: /users
             Method: GET
+  ShowFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./show
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /users/{id}
+            Method: GET
 
   #DynamoDB
   UsersTable:
