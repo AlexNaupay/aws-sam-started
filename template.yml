@@ -1,7 +1,26 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 
+Globals:
+  Function:
+    Runtime: nodejs16.x
+    Timeout: 180
+    Handler: index.handler
+    Environment:
+      Variables:
+        USERS_TABLE_NAME: !Ref UsersTable
+
 Resources:
+  HelloFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./hello
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: GET
   SaveFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -20,11 +39,27 @@ Resources:
           Properties:
             Path: /users
             Method: POST
+  ListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # Handler: index.handler
+      Runtime: nodejs16.x
+      CodeUri: ./list
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UsersTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: GET
 
   #DynamoDB
   UsersTable:
     Type: AWS::Serverless::SimpleTable
+
 Outputs:
   MyApi:
     Description: "API Gateway endpoint URL"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/users/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
